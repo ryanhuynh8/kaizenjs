@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 const router = require('express').Router();
+const { Issue } = require('../models/Issue');
 
 // Some fake data
 const books = [
@@ -19,13 +20,18 @@ const books = [
 // The GraphQL schema in string form
 const typeDefs = `
   type Query { books: [Book] }
-  type Book { title: String, author: String }
+  type Book { subject: String, description: String }
 `;
 
 // The resolvers
 const resolvers = {
-        Query: { books: () => books },
-    };
+    Query: {
+        books: async () => {
+            const result = await Issue.where({id: 1}).fetch();
+            return books;
+        }
+    },
+};
 
 // Put together a schema
 const schema = makeExecutableSchema({
