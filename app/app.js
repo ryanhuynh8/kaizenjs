@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 const router = require('express').Router();
-const { Issue } = require('../models/Issue');
+const { Issue } = require('./models/Issue');
 
 // Some fake data
 const books = [
@@ -27,8 +27,8 @@ const typeDefs = `
 const resolvers = {
     Query: {
         books: async () => {
-            const result = await Issue.where({id: 1}).fetch();
-            return books;
+            const result = await Issue.fetchAll({ withRelated: ['status', 'project']});
+            return result.toJSON();
         }
     },
 };

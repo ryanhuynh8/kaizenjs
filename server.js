@@ -1,11 +1,11 @@
 const chokidar = require('chokidar');
 const watcher = chokidar.watch('./app');
-const express = require('express')
+const express = require('express');
 const app = express();
 
 watcher.on('ready', function() {
     watcher.on('all', function() {
-        console.log("Clearing /app/ module cache from server")
+        console.log("Clearing /app/ module cache from server");
         Object.keys(require.cache).forEach(function(id) {
             if (/[\/\\]app[\/\\]/.test(id)) delete require.cache[id]
         })
